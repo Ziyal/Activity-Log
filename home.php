@@ -1,29 +1,85 @@
+<?php
+// define variables and set to empty values
+$activity = $notes = $date = "";
+$activityErr = $notesErr = $dateErr = "";
+$isValid = true;
+
+// check form inputs for validation
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if (empty($_POST["activity"])) {
+    $isValid = false;
+    $activityErr = "Activity is required";
+  } else {
+    $activity = test_input($_POST["activity"]);
+  }
+
+  if (empty($_POST["notes"])) {
+      $isValid = false;
+    $notesErr = "Notes is required";
+  } else {
+    $notes = test_input($_POST["notes"]);
+  }
+
+  // if all inputs are valid, enter info into database
+  if ($isValid) {
+    // connect to MySQL
+    $link = mysqli_connect("localhost", "root", "", "activity_log");
+    
+    // Check connection
+    if($link === false){
+        die("ERROR: Could not connect. " . mysqli_connect_error());
+    }
+    
+    // Escape user inputs for security
+    $activity = mysqli_real_escape_string($link, $_REQUEST['activity']);
+    $notes = mysqli_real_escape_string($link, $_REQUEST['notes']);
+    $date = mysqli_real_escape_string($link, $_REQUEST['date']);
+    
+    // query to enter data
+    $sql = "INSERT INTO entries (activity, notes, date) VALUES ('$activity', '$notes', '$date')";
+    if(mysqli_query($link, $sql)){
+        header("location:home.php");
+    } else{
+        echo "ERROR: Could not able to execute $sql. " . mysqli_error($link);
+    }
+    
+    // close connection
+    mysqli_close($link);
+  }
+
+}
+
+function test_input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+}
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
     <title>Activity Log</title>
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">-->
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css"/>
     </head>
 
     <body>
         
-            <h1>Activity Log</h1>
+        <h1>Activity Log</h1>
         <div class="container">
             <div class="activities-container">
                 <div class="activities-table">
                     <?php
-                        /* Attempt MySQL server connection. Assuming you are running MySQL
-                        server with default setting (user 'root' with no password) */
+                        
                         $link = mysqli_connect("localhost", "root", "", "activity_log");
                         
-                        // Check connection
                         if($link === false){
                             die("ERROR: Could not connect. " . mysqli_connect_error());
                         }
                         
-                        // Attempt select query execution
+                        // retrieve entries from database and put them into a table
                         $sql = "SELECT * FROM entries ORDER BY date ";
                         if($result = mysqli_query($link, $sql)){
                             if(mysqli_num_rows($result) > 0){
@@ -57,9 +113,12 @@
 
                 <div class="activities-form">
                     <h2>Add an Activity!</h2>
-                    <form action="insert.php" method="post">
-                        <input type="text" name="activity" placeholder="Activity"><br>
-                        <input type="text" name="notes" placeholder="Notes"><br>
+                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post">
+                        <span class="error"><?php echo $activityErr;?></span>
+                        <input type="text" name="activity" placeholder="Activity" value="<?php echo $activity;?>"><br>
+                        <span class="error"><?php echo $notesErr;?></span>
+                        <input type="text" name="notes" placeholder="Notes" value="<?php echo $notes;?>"><br>
+                        <span class="error"><?php echo $dateErr;?></span>
                         <input type="date" name="date"><br>
                         <input type="submit" value="Add Activity">
                     </form>
