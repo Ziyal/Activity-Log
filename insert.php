@@ -16,7 +16,7 @@
     // attempt insert query execution
     $sql = "INSERT INTO entries (activity, notes, date) VALUES ('$activity', '$notes', '$date')";
     if(mysqli_query($link, $sql)){
-        echo "Records added successfully.";
+        header("location:home.php");
     } else{
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($link);
     }

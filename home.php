@@ -9,8 +9,8 @@
 
     <body>
         
-        <div class="container">
             <h1>Activity Log</h1>
+        <div class="container">
             <div class="activities-container">
                 <div class="activities-table">
                     <?php
@@ -24,7 +24,7 @@
                         }
                         
                         // Attempt select query execution
-                        $sql = "SELECT * FROM entries";
+                        $sql = "SELECT * FROM entries ORDER BY date ";
                         if($result = mysqli_query($link, $sql)){
                             if(mysqli_num_rows($result) > 0){
                                 echo "<table>";
@@ -55,13 +55,12 @@
                     ?>
                 </div>
 
-
                 <div class="activities-form">
                     <h2>Add an Activity!</h2>
                     <form action="insert.php" method="post">
-                        <span>Activity: </span><input type="text" name="activity"><br>
-                        <span>Notes: </span><input type="text" name="notes"><br>
-                        <span>Date: </span><input type="date" name="date"><br>
+                        <input type="text" name="activity" placeholder="Activity"><br>
+                        <input type="text" name="notes" placeholder="Notes"><br>
+                        <input type="date" name="date"><br>
                         <input type="submit" value="Add Activity">
                     </form>
                 </div>
