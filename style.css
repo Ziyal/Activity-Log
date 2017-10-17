@@ -1,0 +1,58 @@
+body {
+    background-color: #EFEFEF;
+    font-family: 'Lato', sans-serif;
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+h1 {
+    text-align: center;
+    margin: 20px 0px 5px 0px;
+}
+
+.activities-container {
+    width: 70%;
+    background-color: white;
+}
+
+/* ----- ACTIVITY TABLE ----- */
+.activities-table {
+    /*width: 50%;*/
+    /*order: 1;*/
+    margin: 20px;
+}
+
+th, td {
+    border-bottom: 1px solid #ddd;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2
+}
+
+th {
+    background-color: #436ba5;
+    color: white;
+    padding: 3px 10px 3px 10px;
+}
+
+td {
+    padding: 3px 10px 3px 10px;
+}
+
+/* ----- ACTIVITY FORM ----- */
+.activities-form {
+    /*width: 50%;*/
+    /*order: 2;*/
+    margin: 20px;
+}
+
+h2 {
+    text-align: center;
+    margin: 0px 0px 0px 5px;
+}
+
